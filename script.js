@@ -26,6 +26,32 @@ const dateFormatter = new Intl.DateTimeFormat(undefined, {
   day: "numeric"
 });
 
+let wakeLock = null;
+
+async function requestWakeLock() {
+  if (!("wakeLock" in navigator)) return;
+  if (document.visibilityState !== "visible") return;
+  try {
+    wakeLock = await navigator.wakeLock.request("screen");
+    wakeLock.addEventListener("release", () => {
+      wakeLock = null;
+    });
+  } catch (error) {
+    console.error("Wake lock failed:", error);
+  }
+}
+
+async function releaseWakeLock() {
+  if (!wakeLock) return;
+  try {
+    await wakeLock.release();
+  } catch (error) {
+    console.error("Wake lock release failed:", error);
+  } finally {
+    wakeLock = null;
+  }
+}
+
 function buildDigit(node) {
   const parts = {};
   segmentNames.forEach((name) => {
@@ -61,6 +87,25 @@ fullscreenToggle.addEventListener("click", async () => {
 });
 
 document.addEventListener("fullscreenchange", updateFullscreenLabel);
+document.addEventListener("fullscreenchange", () => {
+  if (document.fullscreenElement) {
+    requestWakeLock();
+    return;
+  }
+  if (document.visibilityState === "visible") {
+    requestWakeLock();
+    return;
+  }
+  releaseWakeLock();
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    requestWakeLock();
+    return;
+  }
+  releaseWakeLock();
+});
 
 function setDigit(index, value) {
   const active = new Set(segmentMap[value] || []);
@@ -99,4 +144,5 @@ function updateClock() {
 
 updateClock();
 updateFullscreenLabel();
+requestWakeLock();
 setInterval(updateClock, 200);
