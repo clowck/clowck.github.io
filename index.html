@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neon Matrix Clock</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <button
+    type="button"
+    class="fullscreen-widget"
+    id="fullscreenToggle"
+    aria-label="Toggle fullscreen"
+    title="Toggle fullscreen"
+  >
+    Fullscreen
+  </button>
+
+  <main class="clock-wrap" aria-label="12 hour neon matrix clock">
+    <div class="display">
+      <section class="clock" id="clock" role="timer" aria-live="polite">
+        <div class="digit" data-digit="h1"></div>
+        <div class="digit" data-digit="h2"></div>
+
+        <div class="colon" data-colon="c1" aria-hidden="true">
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+
+        <div class="digit" data-digit="m1"></div>
+        <div class="digit" data-digit="m2"></div>
+
+        <div class="colon" data-colon="c2" aria-hidden="true">
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+
+        <div class="digit" data-digit="s1"></div>
+        <div class="digit" data-digit="s2"></div>
+
+        <div class="ampm" id="ampm">A<sub>M</sub></div>
+      </section>
+
+      <div class="date-line" id="dateLine">Tuesday, March 3, 2026</div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
